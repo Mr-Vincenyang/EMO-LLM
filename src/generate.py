@@ -112,7 +112,7 @@ def generate_with_interpolation(
 
 def main():
     parser = argparse.ArgumentParser(description="Controllable generation via LoRA interpolation")
-    parser.add_argument("--model_name", default="Qwen/Qwen2-1.5B-Instruct", help="Base model name")
+    parser.add_argument("--model_name", default="Qwen/Qwen3-1.5B", help="Base model name")
     parser.add_argument(
         "--lora_paths", required=True,
         help="Comma-separated style=path pairs, e.g. empathetic=outputs/lora/empathetic,rational=outputs/lora/rational",

@@ -4,7 +4,7 @@
 
 set -euo pipefail
 
-MODEL="Qwen/Qwen2-1.5B-Instruct"
+MODEL="Qwen/Qwen3-1.5B"
 LORA_DIR="outputs/lora"
 
 echo "Starting controllable generation with style interpolation..."

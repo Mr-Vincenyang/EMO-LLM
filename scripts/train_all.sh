@@ -4,7 +4,7 @@
 
 set -euo pipefail
 
-BASE_MODEL="${1:-Qwen/Qwen2-1.5B-Instruct}"
+BASE_MODEL="${1:-Qwen/Qwen3-1.5B}"
 DATA_DIR="${2:-data/train}"
 
 STYLES=("empathetic" "rational" "encouraging" "calm_safe")

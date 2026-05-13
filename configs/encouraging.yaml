@@ -1,6 +1,6 @@
 # LoRA training config for: 鼓励激励型 (encouraging)
 style: encouraging
-model_name: Qwen/Qwen2-1.5B-Instruct
+model_name: Qwen/Qwen3-1.5B
 data_path: data/train/encouraging.jsonl
 output_dir: outputs/lora/encouraging
 

@@ -1,6 +1,6 @@
 # LoRA training config for: 温柔共情型 (empathetic)
 style: empathetic
-model_name: Qwen/Qwen2-1.5B-Instruct
+model_name: Qwen/Qwen3-1.5B
 data_path: data/train/empathetic.jsonl
 output_dir: outputs/lora/empathetic
 

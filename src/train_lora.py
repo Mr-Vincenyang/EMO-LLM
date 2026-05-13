@@ -46,7 +46,7 @@ class StyleTrainingArgs:
         metadata={"help": "Style name: empathetic, rational, encouraging, calm_safe"},
     )
     model_name: str = field(
-        default="Qwen/Qwen2-1.5B-Instruct",
+        default="Qwen/Qwen3-1.5B",
         metadata={"help": "Base model name or path"},
     )
     data_path: str = field(

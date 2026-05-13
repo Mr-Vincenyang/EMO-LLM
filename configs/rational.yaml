@@ -1,6 +1,6 @@
 # LoRA training config for: 理性分析型 (rational)
 style: rational
-model_name: Qwen/Qwen2-1.5B-Instruct
+model_name: Qwen/Qwen3-1.5B
 data_path: data/train/rational.jsonl
 output_dir: outputs/lora/rational
 

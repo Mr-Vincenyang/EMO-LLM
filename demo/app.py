@@ -3,7 +3,7 @@
 Single user input → adjust sliders for empathy/rational/encouraging/calm → see how the response changes.
 
 Run:
-    python demo/app.py --lora_dir outputs/lora --model_name Qwen/Qwen2-1.5B-Instruct
+    python demo/app.py --lora_dir outputs/lora --model_name Qwen/Qwen3-1.5B
 """
 
 from __future__ import annotations
@@ -247,7 +247,7 @@ def create_demo(controller: StyleController):
 
 def main():
     parser = argparse.ArgumentParser()
-    parser.add_argument("--model_name", default="Qwen/Qwen2-1.5B-Instruct", help="Base model name")
+    parser.add_argument("--model_name", default="Qwen/Qwen3-1.5B", help="Base model name")
     parser.add_argument("--lora_dir", default="outputs/lora", help="Directory with style LoRA adapters")
     parser.add_argument("--device", default="auto")
     parser.add_argument("--share", action="store_true", help="Create public Gradio link")

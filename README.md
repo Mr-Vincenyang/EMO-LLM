@@ -77,7 +77,7 @@ pip install -r requirements.txt
 
 ```bash
 # 分别训练（每个风格约需 30-60 分钟，取决于数据量和 GPU）
-bash scripts/train_all.sh Qwen/Qwen2-1.5B-Instruct data/train
+bash scripts/train_all.sh Qwen/Qwen3-1.5B data/train
 ```
 
 或者单独训练某个风格：
@@ -85,7 +85,7 @@ bash scripts/train_all.sh Qwen/Qwen2-1.5B-Instruct data/train
 ```bash
 python src/train_lora.py \
     --style empathetic \
-    --model_name Qwen/Qwen2-1.5B-Instruct \
+    --model_name Qwen/Qwen3-1.5B \
     --data_path data/train/empathetic.jsonl \
     --output_dir outputs/lora/empathetic
 ```

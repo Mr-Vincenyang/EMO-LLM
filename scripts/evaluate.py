@@ -7,7 +7,7 @@ Sweeps combinations of style weights and checks:
   3. Smooth interpolation (neighboring weight combos produce gradual changes)
 
 Usage:
-    python scripts/evaluate.py --lora_dir outputs/lora --model_name Qwen/Qwen2-1.5B-Instruct
+    python scripts/evaluate.py --lora_dir outputs/lora --model_name Qwen/Qwen3-1.5B
 """
 
 from __future__ import annotations
@@ -68,7 +68,7 @@ def sweep_weights(grid_resolution: int = 5):
 
 def main():
     parser = argparse.ArgumentParser()
-    parser.add_argument("--model_name", default="Qwen/Qwen2-1.5B-Instruct")
+    parser.add_argument("--model_name", default="Qwen/Qwen3-1.5B")
     parser.add_argument("--lora_dir", default="outputs/lora")
     parser.add_argument("--output", default="outputs/eval_results.json")
     parser.add_argument("--grid_resolution", type=int, default=3)
