@@ -1,0 +1,28 @@
+# LoRA training config for: 鼓励激励型 (encouraging)
+style: encouraging
+model_name: Qwen/Qwen2-1.5B-Instruct
+data_path: data/train/encouraging.jsonl
+output_dir: outputs/lora/encouraging
+
+lora_r: 16
+lora_alpha: 32
+lora_dropout: 0.05
+target_modules:
+  - q_proj
+  - k_proj
+  - v_proj
+  - o_proj
+  - gate_proj
+  - up_proj
+  - down_proj
+
+per_device_train_batch_size: 4
+gradient_accumulation_steps: 4
+num_train_epochs: 3
+learning_rate: 2.0e-4
+warmup_ratio: 0.1
+lr_scheduler_type: cosine
+logging_steps: 10
+save_strategy: epoch
+fp16: true
+seed: 42
