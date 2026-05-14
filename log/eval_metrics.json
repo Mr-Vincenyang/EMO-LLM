@@ -1,0 +1,79 @@
+{
+  "perplexity": 346.2480342568932,
+  "distinct_2": 0.7429467084639498,
+  "distinct_3": 0.8662207357859532,
+  "self_bleu": {
+    "intra_style": {
+      "calm_safe": 0.02731286959228136,
+      "empathetic": 0.023281979458450047,
+      "encouraging": 0.012065321135088576,
+      "rational": 0.017375
+    },
+    "cross_style": {
+      "calm_safe": 0.049496038445656365,
+      "empathetic": 0.049496038445656365,
+      "encouraging": 0.035281603146391685,
+      "rational": 0.03401443447995172
+    }
+  },
+  "style_embedding_distances": {
+    "calm_safe_vs_empathetic": 1.0,
+    "calm_safe_vs_encouraging": 1.0,
+    "calm_safe_vs_rational": 1.0,
+    "empathetic_vs_encouraging": 1.0,
+    "empathetic_vs_rational": 1.0,
+    "encouraging_vs_rational": 1.0
+  },
+  "interpolation_smoothness": {
+    "avg_smoothness": 0.8676702548154044,
+    "avg_distance": 0.9028703617258604,
+    "per_input": [
+      {
+        "adjacent_distances": [
+          1.0,
+          0.8809523809523809,
+          0.6486486486486487,
+          0.9,
+          1.0,
+          0.95,
+          1.0,
+          1.0
+        ],
+        "mean_distance": 0.9224501287001288,
+        "cv": 0.12241362357374433,
+        "smoothness_score": 0.8909371545366835
+      },
+      {
+        "adjacent_distances": [
+          0.8695652173913043,
+          0.8235294117647058,
+          0.36363636363636365,
+          0.8235294117647058,
+          0.8235294117647058,
+          0.9545454545454546,
+          0.9642857142857143,
+          1.0
+        ],
+        "mean_distance": 0.8278276231441193,
+        "cv": 0.22663430681580463,
+        "smoothness_score": 0.8152388975618007
+      },
+      {
+        "adjacent_distances": [
+          1.0,
+          1.0,
+          0.6666666666666667,
+          1.0,
+          1.0,
+          1.0,
+          1.0,
+          1.0
+        ],
+        "mean_distance": 0.9583333333333334,
+        "cv": 0.11503266569846043,
+        "smoothness_score": 0.8968347123477288
+      }
+    ]
+  },
+  "num_samples": 20
+}

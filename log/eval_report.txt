@@ -1,0 +1,22 @@
+EMO-LLM Quantitative Evaluation Report
+========================================
+
+Perplexity: 346.25
+Distinct-2: 0.7429
+Distinct-3: 0.8662
+
+Style Separation (Self-BLEU):
+  calm_safe: intra=0.0273 cross=0.0495
+  empathetic: intra=0.0233 cross=0.0495
+  encouraging: intra=0.0121 cross=0.0353
+  rational: intra=0.0174 cross=0.0340
+
+Style Embedding Cosine Distances:
+  calm_safe_vs_empathetic: 1.0000
+  calm_safe_vs_encouraging: 1.0000
+  calm_safe_vs_rational: 1.0000
+  empathetic_vs_encouraging: 1.0000
+  empathetic_vs_rational: 1.0000
+  encouraging_vs_rational: 1.0000
+
+Interpolation Smoothness: 0.8677
