@@ -177,31 +177,87 @@ $$ \text{Distinct-}N = \frac{\text{unique N-grams}}{\text{total N-grams}} $$
 | "工作压力大" | *I can understand your concern. I am also facing same problem.* | *I can tell how stressed you are. Tell me what's going on?* | *It sounds like you're feeling overwhelmed by your work.* | *I can understand how you are feeling.* |
 | "和朋友闹矛盾" | *oh i see, it sounds like you are having a hard time...* | *So you are feeling down because of your friend?* | *I am sorry to hear that. What is the problem?* | *I am sorry to hear that. I have been in a similar situation.* |
 
-### 5.4 讨论
+### 5.4 深度分析：风格区分度不足的根因诊断
 
-**风格区分度受限的原因分析**：
+为了定位风格区分度不足的根本原因，我们进行了三组对照实验。
 
-1. **数据同源性**：四个风格的训练数据全部来自 ESConv，而 ESConv 本身就是"情感支持对话"，所有支持策略都天然带有共情底色。即使是"提供建议"（理性分析）也是在共情框架下表达的。
+**实验 A：LoRA 权重相似度分析**
 
-2. **LoRA 容量限制**：rank=16 的 LoRA 适配器虽然参数效率高，但可能不足以捕捉风格之间的显著差异。提高 rank 到 64 或 128 可能带来更好的区分度。
+直接计算四个 LoRA 适配器参数向量的余弦相似度和 L2 距离：
 
-3. **PPL 偏高**：PPL=346 高于预期，可能的原因是：(a) 采样生成引入的随机性；(b) LoRA 适配器在 ESConv 数据上训练 3 个 epoch 后产生了一定程度的过拟合。
+| 风格对 | 余弦相似度 | L2/norm |
+|:---|:---:|:---:|
+| calm_safe ↔ empathetic | **0.901** | 0.223 |
+| empathetic ↔ encouraging | **0.897** | 0.227 |
+| calm_safe ↔ encouraging | 0.895 | 0.229 |
+| empathetic ↔ rational | 0.837 | 0.289 |
+| encouraging ↔ rational | 0.835 | 0.291 |
+| calm_safe ↔ rational | 0.840 | 0.287 |
+
+**发现**：四个 LoRA 的权重彼此高度相似（最低 cos_sim = 0.835）。风格间方差与参数幅值之比仅为 $3 \times 10^{-8}$（近乎为零）。这意味着所有适配器学到了几乎相同的参数变化——ESConv 的"情感支持"本质压倒了策略标签的差异。
+
+**实验 B：Base Model + System Prompt 基线**
+
+关闭 LoRA，直接用 Qwen3-1.7B 基座模型 + 不同 System Prompt 进行生成：
+
+| 风格 | Base Model (prompt-only) | LoRA (trained adapter) |
+|:---|:---|:---|
+| 共情 | *"I can understand how you are feeling..."* | *"I understand, that is why I am here to help."* |
+| 理性 | *"It sounds like you are stressed at work..."* | *"I'm sorry to hear that..."* |
+| 鼓励 | *"I can understand how you feel..."* | *"I hear you. I've been there..."* |
+| 安全 | *"It sounds like you are stressed about work."* | *"I'm sorry to hear that..."* |
+
+**发现**：Base Model 本身对不同 System Prompt 的响应也存在趋同现象。LoRA 训练不仅没有增强区分度，反而因为将模型进一步推向 ESConv 的共情范式，**削弱**了基座模型原有的微弱风格差异。
+
+**实验 C：强对比 Prompt 测试**
+
+在 System Prompt 中加入明确的 DO/DON'T 行为约束和示例：
+
+| 风格 | Prompt 策略 | 模型回复（Base Model） |
+|:---|:---|:---|
+| 共情 | *"ONLY validate feelings. NEVER give advice."* | *"That sounds really hard, I hear you. It's okay to feel stressed."* |
+| 理性 | *"ONLY give logical analysis. NEVER use emotional language."* | *"Let us break this down into 3 parts. 1. Identify the source of stress..."* |
+| 鼓励 | *"ONLY affirm strengths. NEVER analyze."* | *"You are stronger than you think. You can do this!"* |
+| 安全 | *"ONLY check for safety risks. NEVER give advice."* | *"Are you safe right now? Your well-being comes first."* |
+
+**发现**：当 System Prompt 包含明确的 DO/DON'T 约束和示例时，模型能够清晰地区分四种风格。这证明 **Qwen3-1.7B 具备风格区分的能力，但需要极强的 Prompt 引导**。
+
+### 5.5 讨论
+
+**风格区分度受限的三层根因**：
+
+经过 §5.4 的三组对照实验，我们可以将问题定位到三个层次：
+
+1. **数据层（根本原因）**：ESConv 是一个"情感支持对话"数据集，所有 8 种支持策略都在共情框架下运作。四个风格 LoRA 的权重余弦相似度高达 0.84~0.90，直接证明了训练数据的同源性导致了参数的趋同。
+
+2. **模型层**：Qwen3-1.7B 在没有强 Prompt 引导时倾向于默认的"安全共情"模式，对不同 System Prompt 的响应差异不显著。
+
+3. **方法层**：LoRA 训练在 ESConv 数据上**强化**了模型的共情范式，反而削弱了基座模型原有的微弱风格差异（实验 B）。
+
+**对 LoRA 插值的重新理解**：
+
+插值平滑度 0.87 是成立的——模型确实在平滑过渡。但过渡的"幅度"很小：因为四个 LoRA 权重几乎一样，插值只是在细微地调节参数，没有触及不同风格所需的大幅参数变化。**插值机制正确，但被训练数据限制了表现力**。
 
 **改进方向**：
-- 引入风格差异更大的多源训练数据（如专业心理咨询、TED 演讲、危机干预热线对话）
-- 提高 LoRA rank 并增加正则化
-- 在推理时加入风格分类器作为自动评估，替代人工判断
-- 使用对比学习目标增强风格间差异
+
+1. **多源异质训练数据**：理性分析使用专业咨询/技术回答数据，鼓励激励使用 TED 风格数据，冷静安全使用危机干预热线数据
+2. **强对比 Prompt 引导训练**：在训练数据中嵌入 DO/DON'T 行为约束（参照实验 C 的成功经验）
+3. **增大 LoRA 容量**：将 rank 提高到 64 或 128
+4. **对比训练目标**：显式惩罚不同风格 LoRA 的参数相似性
 
 ---
 
 ## 6. 结论
 
-本项目提出并实现了一种基于 **LoRA 参数空间插值**的情绪风格可控大模型回复生成方法。核心贡献包括：
+本项目提出并实现了一种基于 **LoRA 参数空间插值**的情绪风格可控大模型回复生成方法，并进行了系统的实验验证和深度分析。核心发现包括：
 
-1. **方法可行性验证**：证明了不同风格的 LoRA 适配器可以在参数空间中进行线性插值，实现情绪表达的连续控制。插值平滑度达到 0.87，表明风格过渡是渐进的而非跳变的。
+1. **插值机制成立**：不同风格的 LoRA 适配器可以在参数空间中线性插值，平滑度 0.87，过渡渐进而非跳变。
 
-2. **完整实验管线**：从 ESConv 数据集转换、四风格 LoRA 并行训练、到权重插值推理和五维指标评估，搭建了完整的实验链路。
+2. **数据瓶颈显著**：ESConv 数据集的情感支持本质导致四个 LoRA 权重高度相似（cos_sim 0.84~0.90），限制了风格区分度。这是当前方法效果不显著的根本原因。
+
+3. **模型能力存在但需引导**：Qwen3-1.7B 在强对比 Prompt（DO/DON'T + 示例）下可以清晰区分四种风格，说明问题不在模型能力，而在训练数据和 Prompt 设计。
+
+4. **完整实验链路搭建**：从数据转换、并行训练、插值推理到五维指标评估和深度诊断，构成了可复用的实验框架。
 
 3. **诚实的结果分析**：训练数据同源性（全来自 ESConv）导致纯风格区分度有限。这指明了下一步改进的核心方向——引入多源异构训练数据。
 

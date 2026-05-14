@@ -1,0 +1,50 @@
+{
+  "I'm feeling really stressed at/共情": {
+    "baseline": "I can understand how you are feeling. I am in a similar situation right now.",
+    "lora": "I understand, that is why I am here to help."
+  },
+  "I'm feeling really stressed at/理性": {
+    "baseline": "It sounds like you are stressed at work and don't know how to deal with it.",
+    "lora": "I'm sorry to hear that. It sounds like you're working a lot, and that's causing you to feel stressed. Is that correct?"
+  },
+  "I'm feeling really stressed at/鼓励": {
+    "baseline": "I can understand how you feel, I was in a similar situation. I would suggest you try to take a break from work and do something you enjoy.",
+    "lora": "I hear you. I've been there. But I found that talking to a supervisor is always a good idea. I know my boss is the one that can help me find a solution."
+  },
+  "I'm feeling really stressed at/安全": {
+    "baseline": "It sounds like you are stressed about work.",
+    "lora": "I'm sorry to hear that. I have been in a similar situation recently."
+  },
+  "My friend and I had a big argu/共情": {
+    "baseline": "I'm sorry to hear that. That's not a good feeling to be in.",
+    "lora": "I am sorry to hear that. I can imagine how you must feel."
+  },
+  "My friend and I had a big argu/理性": {
+    "baseline": "I am sorry to hear that. I had a friend who got in an argument with someone. He was a good friend, but he made a mistake. I had to tell him that I was upset and that we needed to talk.",
+    "lora": "I can tell that you are feeling very down right now."
+  },
+  "My friend and I had a big argu/鼓励": {
+    "baseline": "It sounds like you're feeling down about the argument you had with your friend.",
+    "lora": "I am sorry to hear that. What kind of argument? Was it about something specific?"
+  },
+  "My friend and I had a big argu/安全": {
+    "baseline": "I can tell from our conversation that you are feeling quite down.",
+    "lora": "I'm sorry to hear that. It must be hard to have a big argument with a friend."
+  },
+  "I feel completely lost about m/共情": {
+    "baseline": "I understand how you are feeling. I also feel lost about my career path.",
+    "lora": "I can understand how you are feeling. I used to be in the same situation."
+  },
+  "I feel completely lost about m/理性": {
+    "baseline": "So you feel as though you are completely lost about your future career.",
+    "lora": "I understand, what career are you looking for?"
+  },
+  "I feel completely lost about m/鼓励": {
+    "baseline": "So you feel that you are not sure about your career path?",
+    "lora": "I can understand that, it must be really scary to not have any direction."
+  },
+  "I feel completely lost about m/安全": {
+    "baseline": "I can understand how you are feeling, I also feel the same way.",
+    "lora": "I understand that feeling, I have been there too."
+  }
+}
