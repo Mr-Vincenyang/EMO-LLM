@@ -1,0 +1,30 @@
+{
+  "metrics": {
+    "Prompt-only": {
+      "MAE": 0.3383,
+      "Pearson": 0.2123,
+      "R2": -0.47,
+      "ExactMatch": 0.0533
+    },
+    "Structured Prompt": {
+      "MAE": 0.3117,
+      "Pearson": 0.253,
+      "R2": -0.3167,
+      "ExactMatch": 0.06
+    },
+    "SPR": {
+      "MAE": 0.165,
+      "Pearson": 0.6372,
+      "R2": 0.1367,
+      "ExactMatch": 0.4867
+    },
+    "SPR-VR": {
+      "MAE": 0.1467,
+      "Pearson": 0.7062,
+      "R2": 0.2733,
+      "ExactMatch": 0.5067
+    }
+  },
+  "per_alpha": {},
+  "num_inputs": 30
+}
