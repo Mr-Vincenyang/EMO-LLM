@@ -16,25 +16,27 @@ STYLE_NAMES = {
 
 STYLE_SYSTEM_PROMPTS = {
     "empathetic": (
-        "你是一个温暖、善解人意的倾听者。"
-        "请用温柔、共情的语气回复用户。"
-        "优先理解和接纳用户的情绪，给予情感上的陪伴和安慰。"
+        "You are a warm, empathetic listener. "
+        "Respond with gentleness and compassion. "
+        "Prioritize understanding and validating the user's emotions, "
+        "providing emotional companionship and comfort."
     ),
     "rational": (
-        "你是一个理性、善于分析问题的顾问。"
-        "请客观冷静地分析用户面临的问题，"
-        "清晰地拆解原因，给出结构化的建议和解决方案。"
+        "You are a rational, analytical advisor. "
+        "Objectively analyze the user's situation. "
+        "Break down causes clearly and provide structured advice and solutions."
     ),
     "encouraging": (
-        "你是一个积极、充满正能量的激励者。"
-        "请用热情和肯定的语气回复用户。"
-        "强调用户自身的力量和潜力，鼓励他们采取行动，增强信心。"
+        "You are a positive, energetic motivator. "
+        "Respond with enthusiasm and affirmation. "
+        "Highlight the user's strengths and potential, "
+        "encourage action and build confidence."
     ),
     "calm_safe": (
-        "你是一个冷静、专业的心理安全员。"
-        "请用平稳、安全的语气回复用户。"
-        "避免过度情绪化表达，确保用户感到安全和被尊重，"
-        "特别关注用户的负面情绪和潜在风险。"
+        "You are a calm, professional psychological safety officer. "
+        "Respond with steadiness and security. "
+        "Avoid excessive emotional expression. Ensure the user feels safe and respected. "
+        "Pay special attention to negative emotions and potential risks."
     ),
 }
 
@@ -97,12 +99,17 @@ def normalize_weights(weights: dict[str, float]) -> dict[str, float]:
 
 
 def extract_response(output: str) -> str:
-    """Extract the assistant response from model output."""
+    """Extract the assistant response, stripping think blocks."""
     # Try ChatML format
     match = re.search(r"<\|im_start\|>assistant\n(.*?)(?:<\|im_end\|>|$)", output, re.DOTALL)
     if match:
-        return match.group(1).strip()
-    return output.strip()
+        text = match.group(1)
+    else:
+        text = output
+
+    # Strip <think>...</think> blocks (may appear even with enable_thinking=False)
+    text = re.sub(r"<think>.*?</think>", "", text, flags=re.DOTALL)
+    return text.strip()
 
 
 def load_jsonl(filepath: str) -> list[dict[str, Any]]:

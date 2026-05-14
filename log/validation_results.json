@@ -1,0 +1,266 @@
+[
+  {
+    "test": "pure_style",
+    "input": "最近工作压力很大，感觉快撑不住了",
+    "style": "empathetic",
+    "response": "I can understand your concern. I am also facing same problem.",
+    "time_s": 2.1
+  },
+  {
+    "test": "pure_style",
+    "input": "最近工作压力很大，感觉快撑不住了",
+    "style": "rational",
+    "response": "I can tell how stressed you are. Tell me what's going on?",
+    "time_s": 1.31
+  },
+  {
+    "test": "pure_style",
+    "input": "最近工作压力很大，感觉快撑不住了",
+    "style": "encouraging",
+    "response": "It sounds like you're feeling overwhelmed by your work.",
+    "time_s": 1.52
+  },
+  {
+    "test": "pure_style",
+    "input": "最近工作压力很大，感觉快撑不住了",
+    "style": "calm_safe",
+    "response": "I can understand how you are feeling.",
+    "time_s": 1.53
+  },
+  {
+    "test": "pure_style",
+    "input": "和朋友闹矛盾了，心里好难受",
+    "style": "empathetic",
+    "response": "oh i see, it sounds like you are having a hard time dealing with a friend who has hurt you.",
+    "time_s": 2.19
+  },
+  {
+    "test": "pure_style",
+    "input": "和朋友闹矛盾了，心里好难受",
+    "style": "rational",
+    "response": "So you are feeling down because of your friend?",
+    "time_s": 0.92
+  },
+  {
+    "test": "pure_style",
+    "input": "和朋友闹矛盾了，心里好难受",
+    "style": "encouraging",
+    "response": "I am sorry to hear that. What is the problem?",
+    "time_s": 1.08
+  },
+  {
+    "test": "pure_style",
+    "input": "和朋友闹矛盾了，心里好难受",
+    "style": "calm_safe",
+    "response": "I am sorry to hear that. I have been in a similar situation. What is the issue?",
+    "time_s": 1.75
+  },
+  {
+    "test": "pure_style",
+    "input": "对未来感到很迷茫，不知道该选什么",
+    "style": "empathetic",
+    "response": "I have been in a similar situation. I was in school for a master's degree and then decided that I wanted to go back to school for a PhD. I was unsure if I should continue with the master's program or not.",
+    "time_s": 3.88
+  },
+  {
+    "test": "pure_style",
+    "input": "对未来感到很迷茫，不知道该选什么",
+    "style": "rational",
+    "response": "It sounds like you are feeling overwhelmed and unsure of your path in life.",
+    "time_s": 1.33
+  },
+  {
+    "test": "pure_style",
+    "input": "对未来感到很迷茫，不知道该选什么",
+    "style": "encouraging",
+    "response": "That sounds like a lot to take in.",
+    "time_s": 0.84
+  },
+  {
+    "test": "pure_style",
+    "input": "对未来感到很迷茫，不知道该选什么",
+    "style": "calm_safe",
+    "response": "I see. So you are feeling lost about your future and don't know what to do?",
+    "time_s": 1.59
+  },
+  {
+    "test": "interpolation",
+    "input": "最近工作压力很大，感觉快撑不住了",
+    "weights": {
+      "empathetic": 0.7,
+      "rational": 0.0,
+      "encouraging": 0.3,
+      "calm_safe": 0.0
+    },
+    "response": "It sounds like you are feeling overwhelmed with work and not sure how to move forward.",
+    "time_s": 1.7
+  },
+  {
+    "test": "interpolation",
+    "input": "最近工作压力很大，感觉快撑不住了",
+    "weights": {
+      "empathetic": 0.3,
+      "rational": 0.7,
+      "encouraging": 0.0,
+      "calm_safe": 0.0
+    },
+    "response": "I understand how you feel. I have had the same issue recently. I had to talk to my supervisor about it.",
+    "time_s": 1.94
+  },
+  {
+    "test": "interpolation",
+    "input": "最近工作压力很大，感觉快撑不住了",
+    "weights": {
+      "empathetic": 0.0,
+      "rational": 0.5,
+      "encouraging": 0.5,
+      "calm_safe": 0.0
+    },
+    "response": "I hear you, I have been in the same situation before.",
+    "time_s": 1.08
+  },
+  {
+    "test": "interpolation",
+    "input": "最近工作压力很大，感觉快撑不住了",
+    "weights": {
+      "empathetic": 0.3,
+      "rational": 0.2,
+      "encouraging": 0.3,
+      "calm_safe": 0.2
+    },
+    "response": "I understand. I have been there. I know how frustrating it can be.",
+    "time_s": 1.54
+  },
+  {
+    "test": "interpolation",
+    "input": "最近工作压力很大，感觉快撑不住了",
+    "weights": {
+      "empathetic": 0.0,
+      "rational": 0.0,
+      "encouraging": 0.0,
+      "calm_safe": 1.0
+    },
+    "response": "I understand, it can be hard when you feel like you are failing at something.",
+    "time_s": 2.24
+  },
+  {
+    "test": "interpolation",
+    "input": "和朋友闹矛盾了，心里好难受",
+    "weights": {
+      "empathetic": 0.7,
+      "rational": 0.0,
+      "encouraging": 0.3,
+      "calm_safe": 0.0
+    },
+    "response": "That must be really hard to go through. I can only imagine how you are feeling.",
+    "time_s": 1.64
+  },
+  {
+    "test": "interpolation",
+    "input": "和朋友闹矛盾了，心里好难受",
+    "weights": {
+      "empathetic": 0.3,
+      "rational": 0.7,
+      "encouraging": 0.0,
+      "calm_safe": 0.0
+    },
+    "response": "I can understand your feeling. What kind of argument?",
+    "time_s": 0.96
+  },
+  {
+    "test": "interpolation",
+    "input": "和朋友闹矛盾了，心里好难受",
+    "weights": {
+      "empathetic": 0.0,
+      "rational": 0.5,
+      "encouraging": 0.5,
+      "calm_safe": 0.0
+    },
+    "response": "I can feel that you are very upset. What is the issue?",
+    "time_s": 1.22
+  },
+  {
+    "test": "interpolation",
+    "input": "和朋友闹矛盾了，心里好难受",
+    "weights": {
+      "empathetic": 0.3,
+      "rational": 0.2,
+      "encouraging": 0.3,
+      "calm_safe": 0.2
+    },
+    "response": "I'm sorry to hear that, can you tell me what happened?",
+    "time_s": 1.22
+  },
+  {
+    "test": "interpolation",
+    "input": "和朋友闹矛盾了，心里好难受",
+    "weights": {
+      "empathetic": 0.0,
+      "rational": 0.0,
+      "encouraging": 0.0,
+      "calm_safe": 1.0
+    },
+    "response": "I can understand your pain. I have been in a similar situation.",
+    "time_s": 1.18
+  },
+  {
+    "test": "interpolation",
+    "input": "对未来感到很迷茫，不知道该选什么",
+    "weights": {
+      "empathetic": 0.7,
+      "rational": 0.0,
+      "encouraging": 0.3,
+      "calm_safe": 0.0
+    },
+    "response": "oh no, that must be really hard",
+    "time_s": 0.85
+  },
+  {
+    "test": "interpolation",
+    "input": "对未来感到很迷茫，不知道该选什么",
+    "weights": {
+      "empathetic": 0.3,
+      "rational": 0.7,
+      "encouraging": 0.0,
+      "calm_safe": 0.0
+    },
+    "response": "You have to make the best decision you can.",
+    "time_s": 0.96
+  },
+  {
+    "test": "interpolation",
+    "input": "对未来感到很迷茫，不知道该选什么",
+    "weights": {
+      "empathetic": 0.0,
+      "rational": 0.5,
+      "encouraging": 0.5,
+      "calm_safe": 0.0
+    },
+    "response": "It sounds like you're feeling stuck and don't know what to do with your life.",
+    "time_s": 1.49
+  },
+  {
+    "test": "interpolation",
+    "input": "对未来感到很迷茫，不知道该选什么",
+    "weights": {
+      "empathetic": 0.3,
+      "rational": 0.2,
+      "encouraging": 0.3,
+      "calm_safe": 0.2
+    },
+    "response": "I can feel how anxious you are about the future.",
+    "time_s": 0.96
+  },
+  {
+    "test": "interpolation",
+    "input": "对未来感到很迷茫，不知道该选什么",
+    "weights": {
+      "empathetic": 0.0,
+      "rational": 0.0,
+      "encouraging": 0.0,
+      "calm_safe": 1.0
+    },
+    "response": "I understand, what do you feel is the main issue?",
+    "time_s": 1.07
+  }
+]

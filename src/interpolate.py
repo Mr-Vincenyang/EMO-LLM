@@ -6,22 +6,31 @@ enabling continuous control over emotional style expression.
 
 from __future__ import annotations
 
-import copy
 from collections import OrderedDict
 from pathlib import Path
 
 import torch
 import torch.nn as nn
-from peft import PeftModel, get_peft_model
+from peft import PeftModel
 from transformers import PreTrainedModel
 
 
-def load_lora_weights(state_dict_path: str | Path) -> OrderedDict:
-    """Load a LoRA adapter's state dict from disk."""
-    state_dict = torch.load(state_dict_path, map_location="cpu", weights_only=True)
-    # Handle both raw state_dict and peft checkpoint format
-    if "state_dict" in state_dict:
-        state_dict = state_dict["state_dict"]
+def load_lora_weights(adapter_dir: str | Path) -> OrderedDict:
+    """Load a LoRA adapter's state dict from a PEFT adapter directory."""
+    adapter_dir = Path(adapter_dir)
+
+    # Try safetensors first, then bin
+    safetensor_path = adapter_dir / "adapter_model.safetensors"
+    bin_path = adapter_dir / "adapter_model.bin"
+
+    if safetensor_path.exists():
+        from safetensors.torch import load_file
+        state_dict = load_file(str(safetensor_path), device="cpu")
+    elif bin_path.exists():
+        state_dict = torch.load(str(bin_path), map_location="cpu", weights_only=True)
+    else:
+        raise FileNotFoundError(f"No adapter_model.safetensors or .bin found in {adapter_dir}")
+
     # Filter only lora weights
     lora_dict = OrderedDict()
     for key, value in state_dict.items():
@@ -36,15 +45,10 @@ def interpolate_lora_dicts(
 ) -> OrderedDict:
     """Interpolate multiple LoRA weight dictionaries with given weights.
 
-    This is the core operation: given N trained LoRA adapters and N mixing
-    weights, produce a single LoRA weight set that is the weighted sum.
+    The core operation: given N trained LoRA adapters and N mixing
+    weights, produce a single LoRA weight set as the weighted sum.
 
-    Args:
-        lora_dicts: Dict mapping style_name -> lora state_dict.
-        weights: Dict mapping style_name -> mixing weight (will be normalized).
-
-    Returns:
-        Interpolated LoRA state dict.
+    ΔW_interp = Σ α_i · ΔW_i
     """
     styles = sorted(lora_dicts.keys())
     weight_list = [weights.get(s, 0.0) for s in styles]
@@ -54,7 +58,6 @@ def interpolate_lora_dicts(
         raise ValueError("Sum of weights must be > 0")
     weight_list = [w / total for w in weight_list]
 
-    # All LoRAs should have the same keys
     ref_keys = list(lora_dicts[styles[0]].keys())
     for s in styles[1:]:
         if set(lora_dicts[s].keys()) != set(ref_keys):
@@ -73,9 +76,8 @@ def interpolate_lora_dicts(
 class InterpolatableLoRA(nn.Module):
     """Wraps a base model + multiple LoRA adapters for interpolation at inference.
 
-    Supports two modes:
-      1. Weight-space interpolation: merge LoRA weights, then load.
-      2. Output-space interpolation: run each LoRA separately, blend logits.
+    Weight-space interpolation: loads each style LoRA's parameters, blends them
+    linearly, and patches the blended weights into a PEFT-wrapped model.
     """
 
     def __init__(
@@ -93,44 +95,30 @@ class InterpolatableLoRA(nn.Module):
         self.lora_dicts: dict[str, OrderedDict] = {}
         for style, path in self.lora_paths.items():
             self.lora_dicts[style] = load_lora_weights(path)
+            print(f"  Loaded {style}: {len(self.lora_dicts[style])} LoRA params")
+
+        # Load the first adapter as a PEFT model so we have LoRA layers to patch
+        first_style = next(iter(self.lora_paths))
+        first_path = str(self.lora_paths[first_style])
+        self.peft_model = PeftModel.from_pretrained(base_model, first_path)
+        # Merge into base to keep things clean, then re-wrap? No — we need the
+        # lora layers present so we can patch their weights. Just keep as-is.
 
     def set_weights(self, weights: dict[str, float]) -> None:
-        """Set mixing weights and update the active LoRA adapter."""
+        """Blend LoRA weights and patch into the active PEFT model."""
         interpolated = interpolate_lora_dicts(self.lora_dicts, weights)
 
-        # Apply interpolated weights to the model's LoRA parameters
-        for name, param in self.base_model.named_parameters():
+        for name, param in self.peft_model.named_parameters():
             if name in interpolated:
                 param.data.copy_(interpolated[name].to(param.device, param.dtype))
 
     def forward(self, *args, **kwargs):
-        return self.base_model(*args, **kwargs)
+        return self.peft_model(*args, **kwargs)
 
     @torch.no_grad()
     def generate(self, *args, **kwargs):
-        return self.base_model.generate(*args, **kwargs)
+        return self.peft_model.generate(*args, **kwargs)
 
     @property
     def device(self):
-        return next(self.base_model.parameters()).device
-
-    @classmethod
-    def from_single_peft(
-        cls,
-        base_model: PreTrainedModel,
-        peft_model: PeftModel,
-        style: str,
-    ) -> InterpolatableLoRA:
-        """Create an InterpolatableLoRA from a single PEFT model."""
-        # Extract LoRA weights from the PEFT model
-        lora_dict = OrderedDict()
-        for name, param in peft_model.named_parameters():
-            if "lora" in name:
-                lora_dict[name] = param.data.clone().cpu()
-
-        wrapper = cls.__new__(cls)
-        wrapper.base_model = base_model
-        wrapper.lora_paths = {}
-        wrapper.mode = "weight"
-        wrapper.lora_dicts = {style: lora_dict}
-        return wrapper
+        return next(self.peft_model.parameters()).device
