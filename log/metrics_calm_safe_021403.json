@@ -1,0 +1,14 @@
+{
+  "style": "calm_safe",
+  "gpu": 0,
+  "samples": 1834,
+  "trainable_params": 17432576,
+  "train_time_s": 371.7,
+  "gpu_mem_model_gb": 4.69,
+  "gpu_mem_before_train_gb": 3.51,
+  "gpu_mem_peak_gb": 12.98,
+  "train_loss": 1.2782,
+  "epochs": 3,
+  "batch_size": 16,
+  "timestamp": "2026-05-14T02:20:30.305925"
+}
