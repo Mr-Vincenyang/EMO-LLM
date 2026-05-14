@@ -3,7 +3,7 @@
 Single user input → adjust sliders for empathy/rational/encouraging/calm → see how the response changes.
 
 Run:
-    python demo/app.py --lora_dir outputs/lora --model_name Qwen/Qwen3-1.5B
+    python demo/app.py --lora_dir outputs/lora --model_name ./models/Qwen/Qwen3-1.7B
 """
 
 from __future__ import annotations
@@ -119,7 +119,9 @@ class StyleController:
                 weights,
                 max_new_tokens=512,
                 temperature=temperature,
-                top_p=0.9,
+                top_p=0.8,
+                top_k=20,
+                min_p=0.0,
             )
         else:
             # Dummy mode for demo without trained LoRAs
@@ -204,7 +206,7 @@ def create_demo(controller: StyleController):
                     s3 = gr.Slider(0, 1, value=0.5, step=0.01, label=STYLE_LABELS_ZH["encouraging"])
                     s4 = gr.Slider(0, 1, value=0.5, step=0.01, label=STYLE_LABELS_ZH["calm_safe"])
 
-                temperature = gr.Slider(0.1, 1.5, value=0.8, step=0.05, label="🌡️ 温度")
+                temperature = gr.Slider(0.1, 1.5, value=0.7, step=0.05, label="🌡️ 温度 (Qwen3 非思考模式推荐 0.7)")
 
                 with gr.Row():
                     submit_btn = gr.Button("🚀 生成回复", variant="primary")
@@ -247,7 +249,7 @@ def create_demo(controller: StyleController):
 
 def main():
     parser = argparse.ArgumentParser()
-    parser.add_argument("--model_name", default="Qwen/Qwen3-1.5B", help="Base model name")
+    parser.add_argument("--model_name", default="./models/Qwen/Qwen3-1.7B", help="Base model name")
     parser.add_argument("--lora_dir", default="outputs/lora", help="Directory with style LoRA adapters")
     parser.add_argument("--device", default="auto")
     parser.add_argument("--share", action="store_true", help="Create public Gradio link")

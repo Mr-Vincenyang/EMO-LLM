@@ -18,7 +18,6 @@ from __future__ import annotations
 import argparse
 import json
 from pathlib import Path
-from typing import Any
 
 import torch
 from transformers import (
@@ -27,13 +26,14 @@ from transformers import (
     GenerationConfig,
 )
 
-from interpolate import InterpolatableLoRA, interpolate_lora_dicts, load_lora_weights
+from interpolate import InterpolatableLoRA
 from utils import (
-    STYLE_SYSTEM_PROMPTS,
     STYLE_NAMES,
-    format_prompt,
+    format_messages,
+    apply_chat_template,
     normalize_weights,
     extract_response,
+    QWEN3_NON_THINKING_GENERATION,
 )
 
 
@@ -67,13 +67,14 @@ def generate_with_interpolation(
     user_input: str,
     weights: dict[str, float],
     max_new_tokens: int = 512,
-    temperature: float = 0.8,
-    top_p: float = 0.9,
+    temperature: float | None = None,
+    top_p: float | None = None,
+    top_k: int | None = None,
+    min_p: float | None = None,
 ) -> tuple[str, dict]:
     """Generate a response using interpolated LoRA weights.
 
-    Returns:
-        (response_text, debug_info)
+    Defaults to Qwen3 non-thinking mode recommended params if not specified.
     """
     weights = normalize_weights(weights.copy())
 
@@ -81,15 +82,20 @@ def generate_with_interpolation(
     if model.mode == "weight":
         model.set_weights(weights)
 
-    # Build prompt
-    prompt = format_prompt(user_input, weights)
+    # Build prompt via Qwen3 chat template
+    messages = format_messages(user_input, weights)
+    prompt = apply_chat_template(tokenizer, messages)
     inputs = tokenizer(prompt, return_tensors="pt").to(model.device)
 
+    # Default to Qwen3 non-thinking mode params
+    defaults = QWEN3_NON_THINKING_GENERATION
     gen_config = GenerationConfig(
         max_new_tokens=max_new_tokens,
-        temperature=temperature,
-        top_p=top_p,
-        do_sample=(temperature > 0),
+        temperature=temperature if temperature is not None else defaults["temperature"],
+        top_p=top_p if top_p is not None else defaults["top_p"],
+        top_k=top_k if top_k is not None else defaults["top_k"],
+        min_p=min_p if min_p is not None else defaults["min_p"],
+        do_sample=True,
         pad_token_id=tokenizer.pad_token_id,
         eos_token_id=tokenizer.eos_token_id,
     )
@@ -97,11 +103,7 @@ def generate_with_interpolation(
     output_ids = model.generate(**inputs, generation_config=gen_config)
     full_output = tokenizer.decode(output_ids[0], skip_special_tokens=False)
 
-    # Handle both ChatML and non-ChatML format
-    if hasattr(model, "mode") and model.mode == "logit":
-        response = tokenizer.decode(output_ids[0][inputs["input_ids"].shape[1]:], skip_special_tokens=True)
-    else:
-        response = extract_response(full_output)
+    response = extract_response(full_output)
 
     info = {
         "weights": weights,
@@ -112,7 +114,7 @@ def generate_with_interpolation(
 
 def main():
     parser = argparse.ArgumentParser(description="Controllable generation via LoRA interpolation")
-    parser.add_argument("--model_name", default="Qwen/Qwen3-1.5B", help="Base model name")
+    parser.add_argument("--model_name", default="./models/Qwen/Qwen3-1.7B", help="Base model name or path")
     parser.add_argument(
         "--lora_paths", required=True,
         help="Comma-separated style=path pairs, e.g. empathetic=outputs/lora/empathetic,rational=outputs/lora/rational",
@@ -120,14 +122,16 @@ def main():
     parser.add_argument(
         "--weights", default=None,
         help="Comma-separated style=weight pairs, e.g. empathetic=0.7,rational=0.3. "
-             "If not provided, interactively ask for input.",
+             "If not provided, defaults to equal blending.",
     )
     parser.add_argument("--input", default=None, help="User input text")
     parser.add_argument("--mode", default="weight", choices=["weight", "logit"],
-                        help="Interpolation mode: 'weight' merges parameters, 'logit' blends outputs")
+                        help="Interpolation mode")
     parser.add_argument("--device", default="auto", help="Device for inference")
-    parser.add_argument("--temperature", type=float, default=0.8)
-    parser.add_argument("--top_p", type=float, default=0.9)
+    parser.add_argument("--temperature", type=float, default=0.7)
+    parser.add_argument("--top_p", type=float, default=0.8)
+    parser.add_argument("--top_k", type=int, default=20)
+    parser.add_argument("--min_p", type=float, default=0.0)
     parser.add_argument("--max_new_tokens", type=int, default=512)
 
     args = parser.parse_args()
@@ -137,11 +141,9 @@ def main():
         key, _, path = pair.partition("=")
         lora_paths[key.strip()] = path.strip()
 
-    # Load model
     print(f"Loading base model: {args.model_name}")
     model, tokenizer = load_base_model(args.model_name, args.device)
 
-    # Build interpolatable model
     print(f"Loading {len(lora_paths)} LoRA adapters...")
     wrapper = InterpolatableLoRA(
         base_model=model,
@@ -149,11 +151,9 @@ def main():
         interpolation_mode=args.mode,
     )
 
-    # Resolve weights
     if args.weights:
         weights = parse_key_value_pairs(args.weights)
     else:
-        # Default: equal blending
         n = len(lora_paths)
         weights = {k: 1.0 / n for k in lora_paths}
 
@@ -169,6 +169,8 @@ def main():
         max_new_tokens=args.max_new_tokens,
         temperature=args.temperature,
         top_p=args.top_p,
+        top_k=args.top_k,
+        min_p=args.min_p,
     )
 
     print(f"Response: {response}")

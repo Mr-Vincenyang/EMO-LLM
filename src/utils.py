@@ -38,40 +38,53 @@ STYLE_SYSTEM_PROMPTS = {
     ),
 }
 
+# Qwen3 non-thinking mode recommended params
+QWEN3_NON_THINKING_GENERATION = {
+    "temperature": 0.7,
+    "top_p": 0.8,
+    "top_k": 20,
+    "min_p": 0.0,
+}
 
-def format_prompt(
+
+def build_system_prompt(style_weights: dict[str, float]) -> str:
+    """Build a single blended system prompt from style weights."""
+    parts = []
+    for style, weight in style_weights.items():
+        if weight > 0.01 and style in STYLE_SYSTEM_PROMPTS:
+            parts.append(f"[{STYLE_NAMES.get(style, style)} × {weight:.0%}] {STYLE_SYSTEM_PROMPTS[style]}")
+    return "\n".join(parts) if parts else STYLE_SYSTEM_PROMPTS["calm_safe"]
+
+
+def format_messages(
     user_input: str,
     style_weights: dict[str, float],
-    system_prompts: dict[str, str] | None = None,
-) -> str:
-    """Build the chat prompt by interpolating system prompts.
+    history: list[dict] | None = None,
+) -> list[dict]:
+    """Build chat messages with system prompt + optional history + user input.
 
-    Args:
-        user_input: The user's message.
-        style_weights: Dict mapping style_name -> weight (0-1). Weights should sum to ~1.
-        system_prompts: Optional custom system prompt overrides.
-
-    Returns:
-        A single string combining the blended system prompt and user input.
+    Uses the messages format expected by Qwen3's apply_chat_template.
     """
-    if system_prompts is None:
-        system_prompts = STYLE_SYSTEM_PROMPTS
+    system_prompt = build_system_prompt(style_weights)
+    messages = [{"role": "system", "content": system_prompt}]
+    if history:
+        messages.extend(history)
+    messages.append({"role": "user", "content": user_input})
+    return messages
 
-    # Build weighted combination of system prompts
-    prompt_parts = []
-    for style, weight in style_weights.items():
-        if weight > 0.01 and style in system_prompts:
-            prompt_parts.append(f"[{STYLE_NAMES.get(style, style)} × {weight:.0%}] {system_prompts[style]}")
 
-    blended_system = "\n".join(prompt_parts) if prompt_parts else system_prompts["calm_safe"]
+def apply_chat_template(tokenizer, messages: list[dict], **kwargs) -> str:
+    """Apply Qwen3 chat template with thinking disabled.
 
-    # ChatML format (Qwen-compatible)
-    text = (
-        f"<|im_start|>system\n{blended_system}<|im_end|>\n"
-        f"<|im_start|>user\n{user_input}<|im_end|>\n"
-        f"<|im_start|>assistant\n"
+    enable_thinking=False: no <think>...</think> blocks, behaving like Qwen2.5-Instruct.
+    """
+    return tokenizer.apply_chat_template(
+        messages,
+        tokenize=False,
+        add_generation_prompt=True,
+        enable_thinking=False,
+        **kwargs,
     )
-    return text
 
 
 def normalize_weights(weights: dict[str, float]) -> dict[str, float]:

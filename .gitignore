@@ -33,6 +33,16 @@ Thumbs.db
 # Jupyter
 .ipynb_checkpoints/
 
+# Downloaded models (large files)
+models/
+
+# Claude
+.claude/
+
+# uv
+uv.lock
+.venv/
+
 # Environment
 .env
 .env.local

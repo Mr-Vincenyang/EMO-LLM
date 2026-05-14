@@ -4,7 +4,7 @@
 
 set -euo pipefail
 
-MODEL="${1:-Qwen/Qwen3-1.5B}"
+MODEL="${1:-./models/Qwen/Qwen3-1.7B}"
 LORA_DIR="${2:-outputs/lora}"
 PORT="${3:-7860}"
 

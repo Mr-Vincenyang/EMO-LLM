@@ -46,7 +46,7 @@ class StyleTrainingArgs:
         metadata={"help": "Style name: empathetic, rational, encouraging, calm_safe"},
     )
     model_name: str = field(
-        default="Qwen/Qwen3-1.5B",
+        default="./models/Qwen/Qwen3-1.7B",
         metadata={"help": "Base model name or path"},
     )
     data_path: str = field(
@@ -74,20 +74,25 @@ def load_and_format_data(
     style: str,
     max_length: int = 1024,
 ) -> Dataset:
-    """Load training data and format with style-specific system prompt."""
+    """Load training data and format with style-specific system prompt via Qwen3 chat template."""
     raw = load_jsonl(data_path)
     system_prompt = STYLE_SYSTEM_PROMPTS.get(style, STYLE_SYSTEM_PROMPTS["calm_safe"])
 
     formatted = []
     for item in raw:
         user_msg = item.get("user", item.get("input", item.get("instruction", "")))
-        assistant_msg = item.get("assistant", item.get("output", item.get("response", "")))
+        assistant_msg = item.get("assistant", item.get("output", item.get("response", ""))
 
-        # ChatML format
-        text = (
-            f"<|im_start|>system\n{system_prompt}<|im_end|>\n"
-            f"<|im_start|>user\n{user_msg}<|im_end|>\n"
-            f"<|im_start|>assistant\n{assistant_msg}<|im_end|>"
+        messages = [
+            {"role": "system", "content": system_prompt},
+            {"role": "user", "content": user_msg},
+            {"role": "assistant", "content": assistant_msg},
+        ]
+        text = tokenizer.apply_chat_template(
+            messages,
+            tokenize=False,
+            add_generation_prompt=False,
+            enable_thinking=False,
         )
         formatted.append({"text": text})
 
@@ -101,7 +106,6 @@ def load_and_format_data(
             padding=False,
             return_tensors=None,
         )
-        # Labels = input_ids (standard causal LM training)
         result["labels"] = [ids.copy() for ids in result["input_ids"]]
         return result
 

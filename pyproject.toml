@@ -1,0 +1,16 @@
+[project]
+name = "llm"
+version = "0.1.0"
+description = "Add your description here"
+requires-python = ">=3.11"
+dependencies = [
+    "accelerate>=1.13.0",
+    "datasets>=4.8.5",
+    "gradio>=6.14.0",
+    "modelscope>=1.36.3",
+    "numpy>=2.4.4",
+    "peft>=0.19.1",
+    "torch>=2.12.0",
+    "tqdm>=4.67.3",
+    "transformers>=4.51.0",
+]
