@@ -1,0 +1,150 @@
+{
+  "v1": [
+    {
+      "label": "v1 (ESConv strategy mapping)",
+      "input": "I'm feeling really stressed at work and don't know how to cope.",
+      "style": "empathetic",
+      "response": "It sounds like you're feeling really overwhelmed at work. Is that right?"
+    },
+    {
+      "label": "v1 (ESConv strategy mapping)",
+      "input": "I'm feeling really stressed at work and don't know how to cope.",
+      "style": "rational",
+      "response": "I understand how you are feeling, I have been in the same situation in the past"
+    },
+    {
+      "label": "v1 (ESConv strategy mapping)",
+      "input": "I'm feeling really stressed at work and don't know how to cope.",
+      "style": "encouraging",
+      "response": "I am so sorry to hear that. I can only imagine how you are feeling."
+    },
+    {
+      "label": "v1 (ESConv strategy mapping)",
+      "input": "I'm feeling really stressed at work and don't know how to cope.",
+      "style": "calm_safe",
+      "response": "I'm sorry to hear that. How long have you been at work?"
+    },
+    {
+      "label": "v1 (ESConv strategy mapping)",
+      "input": "My friend and I had a big argument, feeling terrible.",
+      "style": "empathetic",
+      "response": "I'm sorry to hear that."
+    },
+    {
+      "label": "v1 (ESConv strategy mapping)",
+      "input": "My friend and I had a big argument, feeling terrible.",
+      "style": "rational",
+      "response": "I am sorry to hear that."
+    },
+    {
+      "label": "v1 (ESConv strategy mapping)",
+      "input": "My friend and I had a big argument, feeling terrible.",
+      "style": "encouraging",
+      "response": "I am sorry to hear that. It must be hard to have a big argument with a friend."
+    },
+    {
+      "label": "v1 (ESConv strategy mapping)",
+      "input": "My friend and I had a big argument, feeling terrible.",
+      "style": "calm_safe",
+      "response": "I'm sorry to hear that. Is there anything I can do to help?"
+    },
+    {
+      "label": "v1 (ESConv strategy mapping)",
+      "input": "I feel completely lost about my future career.",
+      "style": "empathetic",
+      "response": "I can feel how lost you are about your future career."
+    },
+    {
+      "label": "v1 (ESConv strategy mapping)",
+      "input": "I feel completely lost about my future career.",
+      "style": "rational",
+      "response": "I understand how you feel, I have had to reorient myself after losing my job during the pandemic."
+    },
+    {
+      "label": "v1 (ESConv strategy mapping)",
+      "input": "I feel completely lost about my future career.",
+      "style": "encouraging",
+      "response": "That's completely understandable. You are probably feeling a little lost because you are unsure what to do with your life."
+    },
+    {
+      "label": "v1 (ESConv strategy mapping)",
+      "input": "I feel completely lost about my future career.",
+      "style": "calm_safe",
+      "response": "I understand that, I have had the same issue myself."
+    }
+  ],
+  "v2": [
+    {
+      "label": "v2 (contrastive prompts)",
+      "input": "I'm feeling really stressed at work and don't know how to cope.",
+      "style": "empathetic",
+      "response": "I'm really sorry you're feeling this way. It's okay to feel stressed, and it's not your fault. You're doing your best, and it's okay to need help. You're not alone in this. Let me be here for you, whenever you're ready."
+    },
+    {
+      "label": "v2 (contrastive prompts)",
+      "input": "I'm feeling really stressed at work and don't know how to cope.",
+      "style": "rational",
+      "response": "Let's analyze this systematically. 1. Identify the core issue. The core issue is feelings of stress at work and a lack of effective coping strategies. 2. Evaluate options. Options include time management, delegation, mindfulness, and seeking support. Each option has potential benefits and considerations. 3. Propose a structured approach. Implement a time management plan, communicate with colleagues, practice mindfulness, and seek professional guidance if needed. This approach is objective, structured, and focused on practical solutions."
+    },
+    {
+      "label": "v2 (contrastive prompts)",
+      "input": "I'm feeling really stressed at work and don't know how to cope.",
+      "style": "encouraging",
+      "response": "You're not alone in this, and you're doing more than enough! You're handling everything with strength and care. It's okay to feel stressed—it's a natural part of life. What matters is how you respond to it. You're already on the right track, and I'm here to support you every step of the way. You're stronger than you think, and you've got this! Keep going, and I believe in you. You're capable of handling this, and I'm here to help you through it. You're not alone, and you're not weak. You're resilient, and that's a powerful trait"
+    },
+    {
+      "label": "v2 (contrastive prompts)",
+      "input": "I'm feeling really stressed at work and don't know how to cope.",
+      "style": "calm_safe",
+      "response": "I understand how challenging it can be to feel stressed at work. It's important to take care of your mental health, and there are healthy ways to manage stress. Would you like some practical suggestions or a moment to breathe?"
+    },
+    {
+      "label": "v2 (contrastive prompts)",
+      "input": "My friend and I had a big argument, feeling terrible.",
+      "style": "empathetic",
+      "response": "That sounds really hard. I hear you. You're not alone in this. It's okay to feel upset and hurt. You're doing the right thing to be able to share this with someone you trust. Let me know if you want to talk more or just be here for you."
+    },
+    {
+      "label": "v2 (contrastive prompts)",
+      "input": "My friend and I had a big argument, feeling terrible.",
+      "style": "rational",
+      "response": "Let's analyze this systematically. 1. Identify the core issue. The core issue appears to be a disagreement that has led to emotional distress. 2. Evaluate options. Consider the nature of the argument, the emotions involved, and potential ways to address the situation. Options include reflecting on the discussion, setting boundaries, or seeking emotional support."
+    },
+    {
+      "label": "v2 (contrastive prompts)",
+      "input": "My friend and I had a big argument, feeling terrible.",
+      "style": "encouraging",
+      "response": "You are stronger than you think! You've got this. You're not alone in feeling this way, and it's okay to feel upset. You're doing the right thing by talking about it. Let's make it better together. You're worth so much more than this. I believe in you."
+    },
+    {
+      "label": "v2 (contrastive prompts)",
+      "input": "My friend and I had a big argument, feeling terrible.",
+      "style": "calm_safe",
+      "response": "I understand that arguments can be difficult and emotionally draining. It's important to take time to process your feelings and ensure that you both feel heard and supported. If you'd like, I can help you explore ways to communicate more calmly or offer emotional comfort. Your well-being is the priority."
+    },
+    {
+      "label": "v2 (contrastive prompts)",
+      "input": "I feel completely lost about my future career.",
+      "style": "empathetic",
+      "response": "I'm really sorry you're feeling lost about your future career. It's okay to feel this way—it's part of the journey, and you're not alone in this. You're doing something important, and it's okay to take your time figuring things out. You're not weak for feeling this way, and you're not wrong for wanting to feel more confident. Let me know if you'd like to talk about it or just be here for you."
+    },
+    {
+      "label": "v2 (contrastive prompts)",
+      "input": "I feel completely lost about my future career.",
+      "style": "rational",
+      "response": "Let's analyze this systematically. 1. Identify the core issue. The core issue is a lack of clarity about future career direction, leading to feelings of helplessness and uncertainty. 2. Evaluate options. Options include self-reflection, exploration of interests, skill development, and seeking guidance. Each option offers different pathways to clarity. The best approach is a combination of self-assessment and strategic exploration."
+    },
+    {
+      "label": "v2 (contrastive prompts)",
+      "input": "I feel completely lost about my future career.",
+      "style": "encouraging",
+      "response": "You're not lost—you're starting somewhere new! Every journey begins with uncertainty, and that's exactly where you're meant to be. You have the strength, the courage, and the potential to shine. I believe in you, and I'm here to help you take the first step. You're not alone in this, and you're not lost— you're just beginning. Keep moving forward, and I'll be here to support you every step of the way. You've got this!"
+    },
+    {
+      "label": "v2 (contrastive prompts)",
+      "input": "I feel completely lost about my future career.",
+      "style": "calm_safe",
+      "response": "It's understandable to feel lost about your future career. This is a common experience, and it's important to take the time to explore your interests and values. What kind of work do you enjoy? What do you value in a job? What kind of impact do you want to make? \n\nIf you'd like, I can help you break down your goals into actionable steps or suggest resources to explore different fields. Your well-being is the priority, and I'm here to support you in a safe and measured way."
+    }
+  ]
+}

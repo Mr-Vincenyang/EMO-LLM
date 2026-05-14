@@ -247,7 +247,52 @@ $$ \text{Distinct-}N = \frac{\text{unique N-grams}}{\text{total N-grams}} $$
 
 ---
 
-## 6. 结论
+## 6. 改进实验：基于强对比 Prompt 的数据增强
+
+基于上述诊断，我们实施了一项改进实验。
+
+### 6.1 方法
+
+利用 Qwen3-1.7B 基座模型 + 强对比 System Prompt（含 DO/DON'T 约束和示例），为 200 条 ESConv 用户输入分别生成四种风格的回复，构建差异化的训练数据。
+
+**关键变化**：
+- v1（原版）：ESConv 策略被动映射 → 同质训练目标
+- v2（改进）：强 Prompt 主动生成 → 差异化训练目标
+
+### 6.2 训练
+
+| 参数 | v1 | v2 |
+|:---|:---|:---|
+| 数据来源 | ESConv 策略映射 | Qwen3 + 强对比 Prompt 生成 |
+| 每风格样本 | 1,834~4,072 | 200 |
+| 训练时间 | 13 min（并行） | 45s（并行） |
+| Loss 范围 | 1.28~1.49 | 0.95~1.03 |
+
+### 6.3 结果：v1 vs v2 全指标对比
+
+| 指标 | v1 (ESConv) | v2 (对比式) | 判定 |
+|:---|:---:|:---:|:---|
+| **PPL** | 346.3 | **6.2** | ✅ 自然度飞跃提升 |
+| Distinct-2 | 0.74 | 0.72 | ≈ 持平 |
+| Distinct-3 | 0.87 | 0.83 | ≈ 持平 |
+| **风格分离度** | **-0.022** ❌ | **+0.078** ✅ | **从负转正** |
+| 插值平滑度 | 0.87 | 0.77 | 略降但仍好 |
+| 平均步长 | 0.90 | 0.72 | 更细粒度 |
+
+**定性对比**（同一输入 "I'm feeling really stressed at work"）：
+
+| 风格 | v1 回复 | v2 回复 |
+|:---|:---|:---|
+| 共情 | *"It sounds like you're feeling overwhelmed..."* | *"I'm really sorry you're feeling this way. It's okay to feel stressed, and it's not your fault."* |
+| 理性 | *"I understand how you are feeling..."* | *"Let's analyze this systematically. 1. Identify the core issue..."* |
+| 鼓励 | *"I am so sorry to hear that..."* | *"You're not alone in this, and you're doing more than enough!"* |
+| 安全 | *"I'm sorry to hear that..."* | *"I understand how challenging it can be. It's important to take care of your mental health..."* |
+
+### 6.4 讨论
+
+改进实验验证了实验 C 的发现：**当训练数据存在明确的风格差异时，LoRA 适配器能够学习并保持这些差异**。v2 的成功也揭示了 v1 的失败根因——不是方法问题，而是数据问题。
+
+LoRA 权重余弦相似度显示 v2 的权重仍然高度相似（0.979~0.982），但输出效果却显著不同。这说明：**强 System Prompt 承担了风格区分的主信号，LoRA 适配器提供了微调和适应性**。这是一个有意义的发现——在小型 LoRA（rank=16）配置下，Prompt Engineering 的效果远大于参数调整。
 
 本项目提出并实现了一种基于 **LoRA 参数空间插值**的情绪风格可控大模型回复生成方法，并进行了系统的实验验证和深度分析。核心发现包括：
 
@@ -257,15 +302,19 @@ $$ \text{Distinct-}N = \frac{\text{unique N-grams}}{\text{total N-grams}} $$
 
 3. **模型能力存在但需引导**：Qwen3-1.7B 在强对比 Prompt（DO/DON'T + 示例）下可以清晰区分四种风格，说明问题不在模型能力，而在训练数据和 Prompt 设计。
 
-4. **完整实验链路搭建**：从数据转换、并行训练、插值推理到五维指标评估和深度诊断，构成了可复用的实验框架。
+## 7. 结论
 
-3. **诚实的结果分析**：训练数据同源性（全来自 ESConv）导致纯风格区分度有限。这指明了下一步改进的核心方向——引入多源异构训练数据。
+本项目提出并实现了一种基于 **LoRA 参数空间插值**的情绪风格可控大模型回复生成方法。经过 v1（ESConv 策略映射）的初步实验、深度诊断（三组对照实验）和 v2（强对比 Prompt 数据增强）的改进验证，得出以下结论：
 
-4. **工程效率**：四风格 LoRA 在两卡 A100 上并行训练仅需 13 分钟，每个适配器仅 67MB，适合算力有限的课程研究场景。
+1. **插值机制成立**：LoRA 参数空间线性插值可以实现情绪风格的连续控制，平滑度 0.77~0.87。
+
+2. **数据质量决定效果**：v1 风格分离度为 -0.022（无法区分风格），v2 提升至 **+0.078**（成功聚类）。PPL 从 346 降至 **6.2**。强 System Prompt 承担了风格区分的主信号，LoRA 适配器提供微调。
+
+3. **完整的实验框架**：从数据生成、并行训练、插值推理到定量评估和深度诊断，搭建了可复用的实验链路。
+
+4. **工程效率**：四风格 LoRA 在两卡 A100 上并行训练，每个适配器仅 67MB，适合算力有限的课程研究场景。
 
 本研究作为 Mixture of LoRA Experts 思想的课程级简化实现，验证了 LoRA 作为可组合模块进行情绪风格控制的可行性。
-
----
 
 ## 7. 项目结构
 

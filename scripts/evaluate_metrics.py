@@ -26,7 +26,7 @@ from generate import generate_with_interpolation
 
 LOG_DIR = Path("log")
 MODEL_PATH = "./models/Qwen/Qwen3-1.7B"
-LORA_DIR = Path("outputs/lora")
+LORA_DIR = Path("outputs/lora_v2")
 
 TEST_INPUTS = [
     "I'm feeling really stressed at work lately and don't know how to cope.",

@@ -31,19 +31,20 @@ from src.utils import STYLE_SYSTEM_PROMPTS, load_jsonl
 
 LOG_DIR = Path("log")
 MODEL_PATH = "./models/Qwen/Qwen3-1.7B"
-DATA_DIR = Path("data/train")
-OUTPUT_DIR = Path("outputs/lora")
+OUTPUT_DIR = Path("outputs/lora_v2")
 
 
 def train_style(
     style: str = "empathetic",
+    data_dir: str = "data/train",
     num_epochs: int = 3,
     batch_size: int = 4,
     grad_accum: int = 4,
 ):
     gpu_id = torch.cuda.current_device() if torch.cuda.is_available() else -1
-    run_id = f"{style}_{datetime.now():%H%M%S}"
+    run_id = f"v2_{style}_{datetime.now():%H%M%S}"
     log_file = LOG_DIR / f"train_{run_id}.log"
+    data_path = Path(data_dir) / f"{style}.jsonl"
 
     logging.basicConfig(
         level=logging.INFO,
@@ -56,7 +57,6 @@ def train_style(
     logger = logging.getLogger(style)
     logger.info(f"Style: {style} | GPU: {gpu_id} | Log: {log_file}")
 
-    data_path = DATA_DIR / f"{style}.jsonl"
     output = OUTPUT_DIR / style
     output.mkdir(parents=True, exist_ok=True)
 
@@ -177,11 +177,12 @@ def train_style(
 def main():
     parser = argparse.ArgumentParser()
     parser.add_argument("--style", required=True, choices=["empathetic", "rational", "encouraging", "calm_safe"])
+    parser.add_argument("--data_dir", default="data/train", help="Directory with style JSONL files")
     parser.add_argument("--epochs", type=int, default=3)
     parser.add_argument("--batch_size", type=int, default=4)
     parser.add_argument("--grad_accum", type=int, default=4)
     args = parser.parse_args()
-    train_style(args.style, args.epochs, args.batch_size, args.grad_accum)
+    train_style(args.style, args.data_dir, args.epochs, args.batch_size, args.grad_accum)
 
 
 if __name__ == "__main__":
