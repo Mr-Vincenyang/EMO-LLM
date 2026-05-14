@@ -36,6 +36,10 @@ Thumbs.db
 # Downloaded models (large files)
 models/
 
+# Raw datasets (large)
+data/esconv/
+data/esconv.zip
+
 # Claude
 .claude/
 
