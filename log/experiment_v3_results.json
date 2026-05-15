@@ -1,0 +1,85 @@
+{
+  "config": {
+    "data": "ESConv ALL samples, 1000 per style",
+    "prompts": "contrastive DO/DON'T",
+    "lora_rank": 16,
+    "no_self_distillation": true,
+    "no_generated_data": true
+  },
+  "results": {
+    "Prompt-only": {
+      "style_separation": 0.0155,
+      "intra_overlap": 0.117,
+      "cross_overlap": 0.1015,
+      "distinct_2": 0.7273,
+      "distinct_3": 0.8326,
+      "_raw": {
+        "empathetic": [
+          "I can understand how stressful that can be.",
+          "I am sorry to hear that.",
+          "That is a very big problem, and I can understand how you feel.",
+          "I know what you're feeling. I've had a lot of anxiety myself.",
+          "That is very sad. I am sorry to hear that."
+        ],
+        "rational": [
+          "It sounds like you are feeling very stressed at work. What do you feel is causing you to feel stressed?",
+          "I'm sorry to hear that, what were you arguing about?",
+          "That sounds like a lot of pressure. Do you have a specific field in mind?",
+          "Have you tried anything else to help you sleep?",
+          "I understand that pressure. It is hard to be independent and have someone else always telling you what to do."
+        ],
+        "encouraging": [
+          "What makes you feel stressed at work?",
+          "I understand how you feel. I know that when I was in that situation, I felt really upset and I felt like I didn't have the right to express my feelings.",
+          "That sounds like a very difficult situation. Do you have any plans for the future?",
+          "I can understand how you feel. I have been feeling anxious too, and I am finding it difficult to sleep at night.",
+          "That sounds like a lot of pressure from your parents."
+        ],
+        "calm_safe": [
+          "I know how you feel. I have been feeling stressed at work too.",
+          "I am sorry to hear that.",
+          "It's common to feel lost when you are trying to figure out your career path. What are you interested in?",
+          "I am sorry to hear that. I am sorry to hear that. What can I do for you?",
+          "That sounds really tough. I've been there too."
+        ]
+      }
+    },
+    "LoRA+Prompt": {
+      "style_separation": -0.0071,
+      "intra_overlap": 0.0975,
+      "cross_overlap": 0.1046,
+      "distinct_2": 0.7768,
+      "distinct_3": 0.8922,
+      "_raw": {
+        "empathetic": [
+          "It is a big job?",
+          "I can understand how you feel. I know that can be very difficult.",
+          "I am so sorry to hear that. I am sure that you are feeling very lost.",
+          "I understand, it can be difficult to get to sleep at night. What is causing you to feel anxious?",
+          "That sounds really hard. I hear you. You're not alone in this."
+        ],
+        "rational": [
+          "What is it that makes you stressed?",
+          "Are you feeling upset about the argument?",
+          "That sounds like a very difficult situation to be in.",
+          "That's a very real problem. What makes you feel anxious at night?",
+          "It is very common to have people who are very concerned for you."
+        ],
+        "encouraging": [
+          "I understand how you feel. I know how stressful work can be. Have you tried talking to a friend or family member about it?",
+          "I am sorry to hear that. I hope that you can get through this and that you feel better.",
+          "That is a very difficult time to be in. I can relate to that.",
+          "Have you tried some kind of meditation or breathing exercises?",
+          "I am sorry to hear that."
+        ],
+        "calm_safe": [
+          "That's a real problem, and I can understand why you feel like that.",
+          "I'm sorry to hear that. I hope you feel better soon.",
+          "That sounds like a very big problem. What do you do for a living?",
+          "Have you been trying to do anything to help you sleep?",
+          "That's really tough. What are you talking about?"
+        ]
+      }
+    }
+  }
+}

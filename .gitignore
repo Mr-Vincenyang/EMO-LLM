@@ -39,6 +39,7 @@ models/
 # Raw datasets (large)
 data/esconv/
 data/esconv.zip
+data/reccon/
 
 # Claude
 .claude/

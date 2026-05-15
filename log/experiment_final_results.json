@@ -1,0 +1,41 @@
+{
+  "config": {
+    "data": "ALL ESConv (10K), neutral prompt",
+    "lora": "single LoRA for quality, 17M params",
+    "no_self_distillation": true
+  },
+  "results": {
+    "Base (no LoRA, no style)": {
+      "avg_length": 14.3,
+      "avg_ttr": 0.9483,
+      "distinct_2": 0.609,
+      "intra_overlap": 0.1948,
+      "cross_overlap": 0.2247,
+      "separation": -0.0299
+    },
+    "Base + Style Prompt": {
+      "avg_length": 10.8,
+      "avg_ttr": 0.9849,
+      "distinct_2": 0.6904,
+      "intra_overlap": 0.1196,
+      "cross_overlap": 0.1527,
+      "separation": -0.033
+    },
+    "LoRA (no style prompt)": {
+      "avg_length": 13.8,
+      "avg_ttr": 0.9553,
+      "distinct_2": 0.6523,
+      "intra_overlap": 0.1473,
+      "cross_overlap": 0.1696,
+      "separation": -0.0223
+    },
+    "LoRA + Style Prompt": {
+      "avg_length": 10.7,
+      "avg_ttr": 0.9757,
+      "distinct_2": 0.601,
+      "intra_overlap": 0.1603,
+      "cross_overlap": 0.1692,
+      "separation": -0.0089
+    }
+  }
+}
